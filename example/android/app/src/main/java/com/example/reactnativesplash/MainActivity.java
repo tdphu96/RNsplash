@@ -1,8 +1,12 @@
 package com.example.reactnativesplash;
 
+import android.os.Bundle;
+
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import com.zoontek.rnbars.RNBars;
+import com.reactnativesplash.Splash;
 
 public class MainActivity extends ReactActivity {
 
@@ -15,6 +19,12 @@ public class MainActivity extends ReactActivity {
     return "main";
   }
 
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    Splash.init(this);
+    super.onCreate(savedInstanceState);
+    RNBars.init(this, "dark-content");
+  }
   /**
    * Returns the instance of the {@link ReactActivityDelegate}. There the RootView is created and
    * you can specify the rendered you wish to use (Fabric or the older renderer).

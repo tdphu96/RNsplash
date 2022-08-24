@@ -1,20 +1,22 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules } from 'react-native';
 
-const LINKING_ERROR =
-  `The package 'react-native-splash' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
+export type VisibilityStatus = "visible" | "hidden" | "transitioning";
+export type Config = { fade?: boolean };
 
-const Splash = NativeModules.Splash  ? NativeModules.Splash  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+const NativeModule: {
+  hide: (fade: boolean) => Promise<true>;
+  getVisibilityStatus: () => Promise<VisibilityStatus>;
+} = NativeModules.Splash;
 
-export function multiply(a: number, b: number): Promise<number> {
-  return Splash.multiply(a, b);
+export function hide(config: Config = {}): Promise<void> {
+  return NativeModule.hide({ fade: false, ...config }.fade).then(() => {});
 }
+
+export function getVisibilityStatus(): Promise<VisibilityStatus> {
+  return NativeModule.getVisibilityStatus();
+}
+
+export default {
+  hide,
+  getVisibilityStatus,
+};
